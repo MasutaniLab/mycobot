@@ -3,11 +3,12 @@ repositories:
     type: git
     url: https://github.com/tylerjw/catch2_ros.git
     version: main
-  serial-ros2:
+  serial:
     type: git
     url: https://github.com/tylerjw/serial
     version: ros2
   fp:
     type: git
     url: https://github.com/tylerjw/fp
-    version: main
+    version: 91e3820e8f6a047988dd75d61617601fdb3152e7
+
