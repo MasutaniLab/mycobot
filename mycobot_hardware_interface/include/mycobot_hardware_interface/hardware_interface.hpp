@@ -1,12 +1,13 @@
 #pragma once
 
 #include <hardware_interface/base_interface.hpp>
+#include <hardware_interface/hardware_info.hpp>
 #include <hardware_interface/system_interface.hpp>
 #include <hardware_interface/types/hardware_interface_return_values.hpp>
+#include <hardware_interface/types/hardware_interface_status_values.hpp>
 #include <memory>
 #include <mycobot/mycobot.hpp>
 #include <rclcpp/macros.hpp>
-#include <rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp>
 #include <string>
 #include <vector>
 
@@ -20,20 +21,20 @@ class MyCobotHardwareInterface : public   hardware_interface::BaseInterface<hard
 
   // Export interfaces
   std::vector<hardware_interface::StateInterface> export_state_interfaces()
-      final;
+      override;
   std::vector<hardware_interface::CommandInterface> export_command_interfaces()
-      final;
+      override;
 
   // livecycle node transitions
-  return_type configure(hardware_interface::HardwareInfo const& info) final;
+  return_type configure(hardware_interface::HardwareInfo const& info) override;
   return_type start(
-      ) final;
+      ) override;
   return_type stop(
-      ) final;
+      ) override;
 
   // hardware read and write
-  hardware_interface::return_type read() final;
-  hardware_interface::return_type write() final;
+  hardware_interface::return_type read() override;
+  hardware_interface::return_type write() override;
 
  private:
   std::unique_ptr<MyCobot> mycobot_ = nullptr;

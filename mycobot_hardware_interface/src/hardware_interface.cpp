@@ -68,6 +68,7 @@ return_type MyCobotHardwareInterface::configure(
   }
 
   status_ = hardware_interface::status::CONFIGURED;
+  RCLCPP_INFO(LOGGER, "Configured");
   return return_type::OK;
 }
 
@@ -79,6 +80,7 @@ return_type MyCobotHardwareInterface::start(
     return return_type::ERROR;
   }
   status_ = hardware_interface::status::STARTED;
+  RCLCPP_INFO(LOGGER, "Started");
   return return_type::OK;
 }
 
@@ -101,6 +103,7 @@ return_type MyCobotHardwareInterface::stop(
   }
 
   status_ = hardware_interface::status::STOPPED;
+  RCLCPP_INFO(LOGGER, "Stopped");
   return return_type::OK;;
 }
 
