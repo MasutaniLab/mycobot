@@ -24,7 +24,7 @@ class MyCobot {
    * @param      port      The port
    * @param[in]  baudrate  The baudrate
    */
-  MyCobot(std::string const& port = "/dev/ttyAMA0", uint32_t baudrate = 115200);
+  MyCobot(std::string const& port = "/dev/ttyAMA0", uint32_t baudrate = 1000000);
 
   /**
    * @brief      Constructs a new instance with an already configured Serial.

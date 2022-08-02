@@ -277,12 +277,9 @@ def generate_launch_description():
 
     joint_state_broadcaster_spawner = Node(
         package="controller_manager",
-        executable="spawner",
-        arguments=[
-            "joint_state_broadcaster",
-            "--controller-manager",
-            "/controller_manager",
-        ],
+        executable="spawner.py",
+        arguments=["joint_state_broadcaster"],
+        output="screen",
     )
 
     delay_rviz_after_joint_state_broadcaster_spawner = RegisterEventHandler(
@@ -295,8 +292,9 @@ def generate_launch_description():
 
     robot_traj_controller_spawner = Node(
         package="controller_manager",
-        executable="spawner",
-        arguments=[robot_controller, "-c", "/controller_manager"],
+        executable="spawner.py",
+        arguments=[robot_controller],
+        output="screen",
     )
 
     # Start the actual move_group node/action server

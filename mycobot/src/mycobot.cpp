@@ -13,7 +13,7 @@
 
 namespace mycobot {
 namespace {
-auto constexpr kBaudrate = 115200;
+auto constexpr kBaudrate = 1000000;
 auto constexpr kTimeout = 100;  // Milliseconds
 }  // namespace
 
