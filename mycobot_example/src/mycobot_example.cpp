@@ -1,7 +1,10 @@
 #include <cmath>
 
+#include "geometry_msgs/msg/pose.hpp"
+#include "geometry_msgs/msg/quaternion.hpp"
 #include "moveit/move_group_interface/move_group_interface.h"
 #include "rclcpp/rclcpp.hpp"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
 
 using MoveGroupInterface = moveit::planning_interface::MoveGroupInterface;
 
@@ -30,21 +33,33 @@ int main(int argc, char ** argv)
   move_group_arm.setNamedTarget("init_pose");
   move_group_arm.move();
 
-  int counter = 1;
+  geometry_msgs::msg::Pose target_pose;
+  tf2::Quaternion q;
+  target_pose.position.x = 0.060;
+  target_pose.position.y = -0.065;
+  target_pose.position.z = 0.298;
 
-  auto joint_values = move_group_arm.getCurrentJointValues();
-  double target_joint_value = to_radians(20.0);
-  for (size_t i = 0; i < joint_values.size(); i++) {
-    if(counter % 2 == 1){
-      joint_values[i] = target_joint_value;
-    }
-    else{
-      joint_values[i] = target_joint_value * -1;
-    }
-    move_group_arm.setJointValueTarget(joint_values);
-    move_group_arm.move();
-    counter++;
-  }
+  q.setRPY(to_radians(-90),to_radians(-90),to_radians(-90));
+  target_pose.orientation = tf2::toMsg(q);
+  move_group_arm.setPoseTarget(target_pose);
+  move_group_arm.move();
+
+  target_pose.position.x = 0.234;
+  target_pose.position.y = -0.08;
+  target_pose.position.z = 0.265;
+  move_group_arm.setPoseTarget(target_pose);
+  move_group_arm.move();
+
+  target_pose.position.x = -0.060;
+  target_pose.position.z = 0.255;
+
+  q.setRPY(to_radians(-180),to_radians(-90),to_radians(-90));
+  target_pose.orientation = tf2::toMsg(q);
+  move_group_arm.setPoseTarget(target_pose);
+  move_group_arm.move();
+
+
+  
 
   move_group_arm.setNamedTarget("init_pose");
   move_group_arm.move();
