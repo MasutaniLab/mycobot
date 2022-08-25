@@ -185,6 +185,7 @@ def generate_launch_description():
                         package='mycobot_example',
                         executable='mycobot_example',
                         output='screen',
+                        prefix="gnome-terminal --",
                         parameters=[robot_description,
                                     robot_description_semantic,
                                     kinematics_yaml])

@@ -1,4 +1,6 @@
 #include <cmath>
+#include <iostream>
+#include <string>
 
 #include "geometry_msgs/msg/pose.hpp"
 #include "geometry_msgs/msg/quaternion.hpp"
@@ -33,32 +35,48 @@ int main(int argc, char ** argv)
   move_group_arm.setNamedTarget("init_pose");
   move_group_arm.move();
 
+  //単体動作確認用
+  std::string s;
+
+
+  //準備体勢への移行
   geometry_msgs::msg::Pose target_pose;
   tf2::Quaternion q;
-  target_pose.position.x = 0.060;
-  target_pose.position.y = -0.065;
-  target_pose.position.z = 0.298;
+  target_pose.position.x = 0.200;
+  target_pose.position.y = 0.000;
+  target_pose.position.z = 0.200;
 
-  q.setRPY(to_radians(-90),to_radians(-90),to_radians(-90));
+  q.setRPY(to_radians(-90),to_radians(0),to_radians(-90)); //前方に向ける
   target_pose.orientation = tf2::toMsg(q);
   move_group_arm.setPoseTarget(target_pose);
   move_group_arm.move();
 
-  target_pose.position.x = 0.234;
-  target_pose.position.y = -0.08;
-  target_pose.position.z = 0.265;
-  move_group_arm.setPoseTarget(target_pose);
-  move_group_arm.move();
+  std::cin >> s;
 
-  target_pose.position.x = -0.060;
-  target_pose.position.z = 0.255;
+  //ものを把持する位置に移動
+  
+  target_pose.position.x = 0.200;
+  target_pose.position.y = 0.000;
+  target_pose.position.z = 0.170;
 
-  q.setRPY(to_radians(-180),to_radians(-90),to_radians(-90));
+  q.setRPY(to_radians(-180),to_radians(0),to_radians(-90)); //下方に向ける
   target_pose.orientation = tf2::toMsg(q);
   move_group_arm.setPoseTarget(target_pose);
   move_group_arm.move();
 
+  std::cin >> s;
 
+  //ものを降ろす位置に移動
+
+  target_pose.position.x = 0.000;
+  target_pose.position.y = -0.200;
+  target_pose.position.z = 0.170;
+
+
+  move_group_arm.setPoseTarget(target_pose);
+  move_group_arm.move();
+
+  std::cin >> s;
   
 
   move_group_arm.setNamedTarget("init_pose");

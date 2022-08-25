@@ -317,7 +317,7 @@ def generate_launch_description():
         control_node,
         robot_state_publisher_node,
         joint_state_broadcaster_spawner,
-        delay_rviz_after_joint_state_broadcaster_spawner,
+        #delay_rviz_after_joint_state_broadcaster_spawner,
         robot_traj_controller_spawner,
         move_group_node,
     ]
