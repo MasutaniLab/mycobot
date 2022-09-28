@@ -36,48 +36,55 @@ int main(int argc, char ** argv)
   move_group_arm.move();
 
   //単体動作確認用
-  std::string s;
+  int s;
 
-
-  //準備体勢への移行
+  //必要な変数を宣言
   geometry_msgs::msg::Pose target_pose;
   tf2::Quaternion q;
-  target_pose.position.x = 0.200;
-  target_pose.position.y = 0.000;
-  target_pose.position.z = 0.200;
 
-  q.setRPY(to_radians(-90),to_radians(0),to_radians(-90)); //前方に向ける
-  target_pose.orientation = tf2::toMsg(q);
-  move_group_arm.setPoseTarget(target_pose);
-  move_group_arm.move();
+  while(s != 0){
+    std::cin >> s;
 
-  std::cin >> s;
+    if(s == 1){
+      //準備体勢への移行
+      target_pose.position.x = 0.200;
+      target_pose.position.y = 0.000;
+      target_pose.position.z = 0.200;
 
-  //ものを把持する位置に移動
+      q.setRPY(to_radians(-90),to_radians(0),to_radians(-90)); //前方に向ける
+      target_pose.orientation = tf2::toMsg(q);
+      move_group_arm.setPoseTarget(target_pose);
+      move_group_arm.move();
+      std::cout << "Idle" << std::endl;
+    }
+    else if(s == 2){
+      //ものを把持する位置に移動
   
-  target_pose.position.x = 0.200;
-  target_pose.position.y = 0.000;
-  target_pose.position.z = 0.170;
+      target_pose.position.x = 0.200;
+      target_pose.position.y = 0.000;
+      target_pose.position.z = 0.170;
 
-  q.setRPY(to_radians(-180),to_radians(0),to_radians(-90)); //下方に向ける
-  target_pose.orientation = tf2::toMsg(q);
-  move_group_arm.setPoseTarget(target_pose);
-  move_group_arm.move();
+      q.setRPY(to_radians(-180),to_radians(0),to_radians(-90)); //下方に向ける
+      target_pose.orientation = tf2::toMsg(q);
+      move_group_arm.setPoseTarget(target_pose);
+      move_group_arm.move();
+      std::cout << "Pick" << std::endl;
+    }
+    else if(s == 3){
+      //ものを降ろす位置に移動
 
-  std::cin >> s;
+      target_pose.position.x = 0.000;
+      target_pose.position.y = -0.200;
+      target_pose.position.z = 0.170;
+      
+      q.setRPY(to_radians(-180),to_radians(0),to_radians(-90)); //下方に向ける
+      target_pose.orientation = tf2::toMsg(q);
+      move_group_arm.setPoseTarget(target_pose);
+      move_group_arm.move();
+      std::cout << "Prace" << std::endl;
 
-  //ものを降ろす位置に移動
-
-  target_pose.position.x = 0.000;
-  target_pose.position.y = -0.200;
-  target_pose.position.z = 0.170;
-
-
-  move_group_arm.setPoseTarget(target_pose);
-  move_group_arm.move();
-
-  std::cin >> s;
-  
+    }
+  }
 
   move_group_arm.setNamedTarget("init_pose");
   move_group_arm.move();
