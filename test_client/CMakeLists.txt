@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(mycobot_moveit_interfeces)
+project(test_client)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -17,12 +17,16 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rosidl_default_generators REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(mycobot_moveit_interfaces REQUIRED)
 
-rosidl_generate_interfaces(
-  ${PROJECT_NAME}
-  "srv/MyCobotCommand.srv"
-)
+add_executable(client src/add_two_ints_client.cpp)
+ament_target_dependencies(client
+  rclcpp mycobot_moveit_interfaces)
+
+install(TARGETS
+  client
+  DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

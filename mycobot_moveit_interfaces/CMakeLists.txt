@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(mycobot_example)
+project(mycobot_moveit_interfaces)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -17,38 +17,11 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(moveit_ros_planning_interface REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(tf2_geometry_msgs REQUIRED)
-find_package(geometry_msgs REQUIRED)
-find_package(mycobot_moveit_interfaces REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
 
-add_executable(mycobot_example 
-  src/mycobot_example.cpp
-)
-
-ament_target_dependencies(mycobot_example
-  moveit_ros_planning_interface
-  rclcpp
-  tf2_geometry_msgs
-  geometry_msgs
-  mycobot_moveit_interfaces
-)
-
-target_include_directories(mycobot_example PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-
-install(TARGETS mycobot_example
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-install(DIRECTORY
-    launch
-    DESTINATION share/${PROJECT_NAME}/
+rosidl_generate_interfaces(
+  ${PROJECT_NAME}
+  "srv/MyCobotCommand.srv"
 )
 
 if(BUILD_TESTING)
