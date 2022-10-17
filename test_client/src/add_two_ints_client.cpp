@@ -25,9 +25,9 @@ int main(int argc, char **argv)
   request->x = atof(argv[1]);
   request->y = atof(argv[2]);
   request->z = atof(argv[3]);
-  request->radx = atoi(argv[4]);
-  request->rady = atoi(argv[5]);
-  request->radz = atoi(argv[6]);
+  request->roll = atof(argv[4]);
+  request->pitch = atof(argv[5]);
+  request->yaw = atof(argv[6]);
 
   while (!client->wait_for_service(1s)) {
     if (!rclcpp::ok()) {

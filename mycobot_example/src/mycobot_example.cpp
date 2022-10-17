@@ -30,15 +30,15 @@ void add( const std::shared_ptr<mycobot_moveit_interfaces::srv::MyCobotCommand::
   target_pose.position.y = request->y;
   target_pose.position.z = request->z;
 
-  q.setRPY(to_radians(request->radx),to_radians(request->rady),to_radians(request->radz)); //前方に向ける
+  q.setRPY(to_radians(request->roll),to_radians(request->pitch),to_radians(request->yaw)); //前方に向ける
   target_pose.orientation = tf2::toMsg(q);
 
   move_group_arm->setPoseTarget(target_pose);
   move_group_arm->move();
 
   response->arm_status = "move end";
-  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Incoming request\nx: %lf" " y: %lf" " z: %lf" "radx: %ld" "rady:%ld" "radz:%ld",   
-                request->x, request->y, request->z, request->radx, request->rady, request->radz);                                          
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Incoming request\nx: %lf" " y: %lf" " z: %lf" "roll: %ld" "pitch:%ld" "yaw:%ld",   
+                request->x, request->y, request->z, request->roll, request->pitch, request->yaw);                                          
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%s]", response->arm_status.c_str());
 }
 
