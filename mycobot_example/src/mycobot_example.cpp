@@ -2,13 +2,15 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <sstream>
+#include <vector>
 
 #include "geometry_msgs/msg/pose.hpp"
 #include "geometry_msgs/msg/quaternion.hpp"
 #include "moveit/move_group_interface/move_group_interface.h"
 #include "rclcpp/rclcpp.hpp"
 #include "tf2_geometry_msgs/tf2_geometry_msgs.h"
-#include "mycobot_moveit_interfaces/srv/my_cobot_command.hpp"     // CHANGE
+#include "airobot_interfaces/srv/string_command.hpp"     // CHANGE
 
 using moveit::planning_interface::MoveGroupInterface;
 MoveGroupInterface *move_group_arm;
@@ -20,9 +22,69 @@ double to_radians(const double deg_angle)
   return deg_angle * M_PI / 180.0;
 }
 
-void add( const std::shared_ptr<mycobot_moveit_interfaces::srv::MyCobotCommand::Request> request,
-          std::shared_ptr<mycobot_moveit_interfaces::srv::MyCobotCommand::Response> response) 
+void callback( const std::shared_ptr<airobot_interfaces::srv::StringCommand::Request> request,
+          std::shared_ptr<airobot_interfaces::srv::StringCommand::Response> response) 
 {
+  //リクエストを分割
+  std::string cmd = request->command;
+  std::string c;
+  std::vector<std::string> commands;
+
+  std::stringstream scmd{cmd}; 
+
+  while( std::getline(scmd, c, ' ') ) {
+    commands.push_back(c);
+  }
+
+  //Debug
+  for (const auto& s : commands) {
+    std::cout << s << std::endl;
+  }
+
+  if(commands[0] == "TargetMove"){
+    if(commands.size() != 7){
+      response->answer = "引数の数が正しくありません";
+    }
+    else{
+      geometry_msgs::msg::Pose target_pose;
+      tf2::Quaternion q;
+
+      target_pose.position.x = std::stod(commands[1]);
+      target_pose.position.y = std::stod(commands[2]);
+      target_pose.position.z = std::stod(commands[3]);
+
+      q.setRPY(to_radians(std::stod(commands[4])),to_radians(std::stod(commands[5])),to_radians(std::stod(commands[6])));
+      target_pose.orientation = tf2::toMsg(q);
+
+      move_group_arm->setPoseTarget(target_pose);
+      move_group_arm->move();
+
+      response->answer = "移動完了";
+
+    }
+    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%s]", response->answer.c_str());
+  }
+
+  else if (commands[0] == "LastJointSet"){
+    if(commands.size() != 2){
+      response->answer = "引数の数が正しくありません";
+    }
+    else{
+      auto joint_values = move_group_arm->getCurrentJointValues();
+      joint_values[5] = to_radians(std::stod(commands[1]));
+      move_group_arm->setJointValueTarget(joint_values);
+      move_group_arm->move();
+      
+      response->answer = "移動完了";
+    }
+    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%s]", response->answer.c_str());
+  }
+
+  else{
+     response->answer = "不正なコマンドです";
+     RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%s]", response->answer.c_str());
+  }
+  /* 
   geometry_msgs::msg::Pose target_pose;
   tf2::Quaternion q;
   
@@ -39,7 +101,8 @@ void add( const std::shared_ptr<mycobot_moveit_interfaces::srv::MyCobotCommand::
   response->arm_status = "move end";
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Incoming request\nx: %lf" " y: %lf" " z: %lf" "roll: %ld" "pitch:%ld" "yaw:%ld",   
                 request->x, request->y, request->z, request->roll, request->pitch, request->yaw);                                          
-  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%s]", response->arm_status.c_str());
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%s]", response->answer.c_str());
+  */
 }
 
 int main(int argc, char ** argv)
@@ -60,8 +123,7 @@ int main(int argc, char ** argv)
   move_group_arm->setNamedTarget("init_pose");
   move_group_arm->move();
 
-  rclcpp::Service<mycobot_moveit_interfaces::srv::MyCobotCommand>::SharedPtr service =                 
-    move_group_node->create_service<mycobot_moveit_interfaces::srv::MyCobotCommand>("my_cobot_ints",  &add);
+  rclcpp::Service<airobot_interfaces::srv::StringCommand>::SharedPtr service = move_group_node->create_service<airobot_interfaces::srv::StringCommand>("my_cobot",  &callback);
 
   thread.join();
 }

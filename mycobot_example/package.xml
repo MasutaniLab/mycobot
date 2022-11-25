@@ -18,7 +18,7 @@
   <depend>geometry_msgs</depend>
   <depend>mycobot</depend>
   <depend>mycobot_280_description</depend>
-  <depend>mycobot_moveit_interfaces</depend>
+  <depend>airobot_interfaces</depend>
 
 
   <export>

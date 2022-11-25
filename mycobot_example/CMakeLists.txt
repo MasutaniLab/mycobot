@@ -21,7 +21,7 @@ find_package(moveit_ros_planning_interface REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(mycobot_moveit_interfaces REQUIRED)
+find_package(airobot_interfaces REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -35,7 +35,7 @@ ament_target_dependencies(mycobot_example
   rclcpp
   tf2_geometry_msgs
   geometry_msgs
-  mycobot_moveit_interfaces
+  airobot_interfaces
 )
 
 target_include_directories(mycobot_example PUBLIC
