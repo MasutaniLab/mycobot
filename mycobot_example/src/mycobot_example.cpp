@@ -64,13 +64,18 @@ void callback( const std::shared_ptr<airobot_interfaces::srv::StringCommand::Req
     }
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%s]", response->answer.c_str());
   }
-
+  /*
   else if (commands[0] == "LastJointSet"){
     if(commands.size() != 2){
       response->answer = "引数の数が正しくありません";
     }
     else{
-      auto joint_values = move_group_arm->getCurrentJointValues();
+      std::vector<double> joint_values = (move_group_arm->getCurrentJointValues());
+
+      for (const auto& s : joint_values) {
+        std::cout << s << std::endl;
+      }
+
       joint_values[5] = to_radians(std::stod(commands[1]));
       move_group_arm->setJointValueTarget(joint_values);
       move_group_arm->move();
@@ -79,6 +84,7 @@ void callback( const std::shared_ptr<airobot_interfaces::srv::StringCommand::Req
     }
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%s]", response->answer.c_str());
   }
+  */
 
   else{
      response->answer = "不正なコマンドです";
@@ -121,6 +127,8 @@ int main(int argc, char ** argv)
   move_group_arm->setMaxVelocityScalingFactor(1.0);  // Set 0.0 ~ 1.0
   move_group_arm->setMaxAccelerationScalingFactor(1.0);  // Set 0.0 ~ 1.0
   move_group_arm->setNamedTarget("init_pose");
+  std::vector<double> joint_values{to_radians(0.0), to_radians(120.0), to_radians(-150.0), to_radians(0.0), to_radians(0.0), to_radians(0.0)};
+  move_group_arm->setJointValueTarget(joint_values);
   move_group_arm->move();
 
   rclcpp::Service<airobot_interfaces::srv::StringCommand>::SharedPtr service = move_group_node->create_service<airobot_interfaces::srv::StringCommand>("my_cobot",  &callback);
