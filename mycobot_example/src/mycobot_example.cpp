@@ -17,7 +17,7 @@ MoveGroupInterface *move_group_arm;
 
 static const rclcpp::Logger LOGGER = rclcpp::get_logger("joint_values");
 
-double to_radians(const double deg_angle)
+double to_radians(double deg_angle)
 {
   return deg_angle * M_PI / 180.0;
 }
@@ -64,27 +64,21 @@ void callback( const std::shared_ptr<airobot_interfaces::srv::StringCommand::Req
     }
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%s]", response->answer.c_str());
   }
-  /*
-  else if (commands[0] == "LastJointSet"){
-    if(commands.size() != 2){
+  else if(commands[0] == "JointMove"){
+    if(commands.size() != 7){
       response->answer = "引数の数が正しくありません";
     }
     else{
-      std::vector<double> joint_values = (move_group_arm->getCurrentJointValues());
+      std::vector<double> joint_values{to_radians(std::stod(commands[1])), to_radians(std::stod(commands[2])), to_radians(std::stod(commands[3])), to_radians(std::stod(commands[4])), to_radians(std::stod(commands[5])), to_radians(std::stod(commands[6]))};
 
-      for (const auto& s : joint_values) {
-        std::cout << s << std::endl;
-      }
-
-      joint_values[5] = to_radians(std::stod(commands[1]));
       move_group_arm->setJointValueTarget(joint_values);
       move_group_arm->move();
-      
+
       response->answer = "移動完了";
+
     }
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%s]", response->answer.c_str());
   }
-  */
 
   else{
      response->answer = "不正なコマンドです";
