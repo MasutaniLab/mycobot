@@ -84,25 +84,6 @@ void callback( const std::shared_ptr<airobot_interfaces::srv::StringCommand::Req
      response->answer = "不正なコマンドです";
      RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%s]", response->answer.c_str());
   }
-  /* 
-  geometry_msgs::msg::Pose target_pose;
-  tf2::Quaternion q;
-  
-  target_pose.position.x = request->x;
-  target_pose.position.y = request->y;
-  target_pose.position.z = request->z;
-
-  q.setRPY(to_radians(request->roll),to_radians(request->pitch),to_radians(request->yaw)); //前方に向ける
-  target_pose.orientation = tf2::toMsg(q);
-
-  move_group_arm->setPoseTarget(target_pose);
-  move_group_arm->move();
-
-  response->arm_status = "move end";
-  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Incoming request\nx: %lf" " y: %lf" " z: %lf" "roll: %ld" "pitch:%ld" "yaw:%ld",   
-                request->x, request->y, request->z, request->roll, request->pitch, request->yaw);                                          
-  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%s]", response->answer.c_str());
-  */
 }
 
 int main(int argc, char ** argv)
